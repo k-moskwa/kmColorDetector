@@ -32,37 +32,46 @@
 
 #include "common.h"
 
-/**
-*/
+/// Definition of interrupt sense.
 typedef enum {
+	/// Interrupt on low level state.
 	EXT_INT_LOW_LEVEL,
+	/// Interrupt on any logical change.
 	EXT_INT_LOGICAL_CHANGE,
+	/// Interrupt on falling edge.
 	EXT_INT_FALLING_EDGE,
+	/// Interrupt on rising edge.
 	EXT_INT_RISING_EDGE
 } ExtIntSense;
 
-/**
-*/
+/// Definition available interrupts
 typedef enum {
+	/// External interrupt 0 (available on PIN PD2 for ATmega32)
 	EXT_INT_0,
+	/// External interrupt 1 (available on PIN PD3 for ATmega32)
 	EXT_INT_1
 } ExtIntType;
 
 /**
+Definition of the External Interrupt Callback
+@param Pointer for void content that is registered in #extIntRegisterCallback function 
+and will be delivered to callback.
 */
 typedef void ExtIntCallback(void *);
 
 /**
-@param type
-@param sense
-@param pullup
-@param callback
-@param userData
+Register and enable External Interrupt.
+@param type Type of the interrupt, either #EXT_INT_0 or #EXT_INT_1.
+@param sense Sense of the signal issuing interrupt.
+@param pullup If true, the specific pin is going to be set to pull-up input.
+@param callback Pointer to the callback function to be issued on the specific interrupt.
+@param userData User data void pointer to structure to be delivered to callback "as-is".
 */
 void extIntRegisterCallback(ExtIntType type, ExtIntSense sense, bool pullup, ExtIntCallback *callback, void *userData);
 
 /**
-@param type
+Disable specific external interrupt, so it's not called anymore.
+@param type Type of the interrupt, either #EXT_INT_0 or #EXT_INT_1.
 */
 void extIntDisable(ExtIntType type);
 

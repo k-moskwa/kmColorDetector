@@ -32,9 +32,10 @@
  *      PIN2  = En
  *      PIN1  = Rw
  *      PIN0  = Rs
- *      D0, D1, D2, D3, K, Vss - connected to GND
- *      Vdd - to +5V
- *      Vee - to 10k var resistor
+ *      LCD D0, D1, D2, D3 - not connected 
+ *		K, Vss - connected to GND
+ *      Vdd - connected to +5V
+ *      Vee - connected to +5V via 10k var resistor
  *
  *  References:
  * -# http://web.alfredstate.edu/faculty/weimandn/lcd/lcd_initialization/lcd_initialization_index.html

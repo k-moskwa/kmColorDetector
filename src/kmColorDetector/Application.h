@@ -43,6 +43,4 @@ Main application loop routine to be issued periodically without delay.
 */
 void appLoop(void);
 
-
-
 #endif /* APPLICATION_H_ */

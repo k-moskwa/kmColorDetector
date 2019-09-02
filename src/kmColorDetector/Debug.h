@@ -32,12 +32,9 @@
 
 #include "common.h"
 
-#define DEBUG_MAIN_PIN DEBUG_PIN_7
-#define DEBUG_BUTTON_PIN DEBUG_PIN_6
-
 /**
 Initializes all ports to pull-up state.
-NOTE: This method should be issued first in the main routine
+\b NOTE: This method should be issued first in the main routine
 */
 void dbPullUpAllPorts(void);
 
@@ -46,22 +43,27 @@ Initializes the debug routines with specific number of dbStep calls to switch DB
 Following definitions to be set in config.h file @n
 #define \b DEBUG_DDR data direction register for debug led (e.g DDRB) @n
 #define \b DEBUG_PORT debug led port (e.g PORTB) @n
-#define \b DEBUG_PIN debug led pin (e.g PB1) @n
+#define \b DEBUG_PINX debug led pin (e.g PB1) @n
 to disable debug feature completely - define \b NO_PIN_DEBUG env variable
 @param number of steps to switch debug pin from high to low and from low to high state
 */
 void dbInit(void);
 
 /**
-Issues next debug step.
+Issues next debug by toggling the led of specific number.
+@param pin Pin number from 0 to 7. Note that only pins that have defined DEBUG_PINX are active.
 */
 void dbToggle(uint8_t pin);
 
 /**
+Send current color measure to serial interface if available.
+This function uses Serial.h functions.
 */
 void dbMeasureToSerial(void);
 
 /**
+Send current color measure to LCD if available.
+This function uses LiquidCrystal.h functions
 */
 void dbMeasureToLCD(void);
 

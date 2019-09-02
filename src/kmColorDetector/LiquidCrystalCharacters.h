@@ -30,13 +30,21 @@
 #include "common.h"
 #include "stdint.h"
 
+/// Cursor right arrow character number.
 static const uint8_t LCD_CURSOR_RIGHT_NO	= 0x01;
+/// Cursor right arrow character shape.
 static const uint8_t LCD_CURSOR_RIGHT[] 	= { 16,24,28,30,28,24,16,32 } ;
+/// Cursor left arrow character number.
 static const uint8_t LCD_CURSOR_LEFT_NO		= 0x02;
+/// Cursor left arrow character shape.
 static const uint8_t LCD_CURSOR_LEFT[] 		= { 1,3,7,15,7,3,1,32 };
+/// Cursor down arrow character number.
 static const uint8_t LCD_CURSOR_DOWN_NO		= 0x03;
+/// Cursor down arrow character shape.
 static const uint8_t LCD_CURSOR_DOWN[] 		= { 32,32,32,32,32,31,14,4 };
+/// Check mark character number.
 static const uint8_t LCD_CHAR_CHECK_MARK_NO	= 0x04;
+/// Check mark character shape.
 static const uint8_t LCD_CHAR_CHECK_MARK[] 	= { 1,1,2,2,20,20,8,8 };
 
 #endif /* LIQUIDCRYSTALCHARACTERS_H_ */
