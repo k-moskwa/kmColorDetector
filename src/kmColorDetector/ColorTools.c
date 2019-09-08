@@ -55,6 +55,12 @@ void colorSetModels(const RgbColor8_t *colorModels, uint8_t colorModelsAvailable
 }
 
 uint8_t colorNormalizeSingle(uint16_t source, uint16_t sourceBlackLevel, uint16_t sourceWhiteLevel) {
+	// result = 
+	// (source - sourceBlackLevel) * COLOR_NORMAL_RESULT_RANGE
+	// ------------------------------------------------------- + COLOR_NORMAL_RESULT_BLACK_LEVEL
+	//          (sourceWhiteLevel - sourceBlackLevel);
+	// where COLOR_NORMAL_RESULT_RANGE = COLOR_NORMAL_RESULT_WHITE_LEVEL - COLOR_NORMAL_RESULT_BLACK_LEVEL
+
 	int32_t tmp = source;
 	tmp -= sourceBlackLevel;
 	tmp *= COLOR_NORMAL_RESULT_RANGE;

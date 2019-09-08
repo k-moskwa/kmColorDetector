@@ -21,9 +21,6 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
- *  References:
- *
  */
 
 #ifndef BUTTONS_H_
@@ -59,11 +56,5 @@ bool btnPressed(void);
 Resets the button state so application is ready for the next press.
 */
 void btnReset(void);
-
-/**
-Returns current state of the button without buffering.
-@return true in case button state is 'now' pressed
-*/
-bool btnGetState(void);
 
 #endif /* BUTTONS_H_ */

@@ -23,7 +23,14 @@
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  *  References:
- * 
+ * -# https://www.waveshare.com/color-sensor.htm
+ * -# https://www.waveshare.com/wiki/Color_Sensor
+ * -# https://www.waveshare.com/w/upload/6/60/Color-Sensor-UserManual.pdf
+ * -# https://www.waveshare.com/w/upload/b/b2/Color-Sensor-Schematic.pdf
+ * -# https://www.waveshare.com/wiki/Color-Sensor_Software
+ * -# https://botland.com.pl/pl/content/153-wykrywanie-koloru-z-arduino 
+ * -# http://www.waveshare.com/wiki/Color-Sensor_Software
+ * -# https://github.com/MajicDesigns/MD_TCS230
  */
 
 #ifndef SENSOR_H_
@@ -32,35 +39,56 @@
 #include "common.h"
 #include "ColorTools.h"
 
-/**
-*/
+/// User data remapping macro for callback registration
 #define TSC_USER_DATA(X) (void *)(X)
 
 /**
-*/
-typedef void TscCallback(void *);
+Definition of the Color Sensor Callback
+@param Pointer for void content that is registered in #tscRegisterCallbackMeasureFinished function
+and will be delivered to callback.
+*/typedef void TscCallback(void *);
 
 /**
+Initialize Color Sensor based on TCS3200
+Following definitions to be set in config.h file @n
+#define \b TSC_DDR  Direction register for TCS3200 sensor module@n
+#define \b TSC_PORT PORTD Port register for TCS3200 sensor@n
+#define \b TSC_PIN_OUT Port pin for OUT wire TCS320@n
+#define \b TSC_PIN_LED Port pin for LED wire TCS320@n
+#define \b TSC_PIN_S0 Port pin for S0 wire TCS3200@n
+#define \b TSC_PIN_S1 Port pin for S1 wire TCS3200@n
+#define \b TSC_PIN_S2 Port pin for S2 wire TCS3200@n
+#define \b TSC_PIN_S3 Port pin for S3 wire TCS3200@n
 */
 void tscInit(void);
 
 /**
+To be periodically issued in the main loop.
 */
 void tscLoop(void);
 
 /**
+Starts measure process. When measure is finished callback registered in #tscRegisterCallbackMeasureFinished.
+Use #tscGetColor to get raw color measure result from sensor.
 */
 void tscStartMeasure(void);
 
 /**
+When measure is finished, this function returns measured value in the RAW RGB format.
+@result RAW RGB measure result.
 */
 RgbColor16_t tscGetColor(void);
 
 /**
-@param callback
-@param userData
+Register and enable Color Sensor callback issued when measure is ready after calling #tscStartMeasure function.
+@param callback Pointer to the callback function to be issued when measure is finished.
+@param userData User data void pointer to structure to be delivered to callback "as-is".
 */
 void tscRegisterCallbackMeasureFinished(TscCallback *callback, void *userData);
 
+/**
+Unregister Color Sensor measure finished callback, so it's not called anymore.
+*/
+void tscUnregisterCallbackMeasureFinished(void);
 
 #endif /* SENSOR_H_ */

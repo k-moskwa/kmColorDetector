@@ -1,4 +1,3 @@
-
  /**
  * main.c
  *
@@ -21,8 +20,6 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
- *  References:
  */
 
 #include "common.h"
@@ -30,11 +27,9 @@
 #include <stdbool.h>
 
 #include "Application.h"
-#include "SoundPlayer.h"
 
+int main(void) {
 
-int main(void)
-{
 	appInit();
     while (true) {
 		appLoop();

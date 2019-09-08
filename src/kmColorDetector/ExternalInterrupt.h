@@ -23,7 +23,11 @@
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  *  References:
- *
+ * -# https://microchipdeveloper.com/8avr:extint
+ * -# http://www.circuitstoday.com/working-with-external-interrupts-in-avr
+ * -# https://exploreembedded.com/wiki/AVR_External_Interrupts
+ * -# https://github.com/GreyGnome/EnableInterrupt
+ * -# https://sites.google.com/site/qeewiki/books/avr-guide/external-interrupts-on-the-atmega328
  */
 
 
@@ -31,6 +35,9 @@
 #define EXTERNALINTERRUPT_H_
 
 #include "common.h"
+
+/// User data remapping macro for callback registration
+#define TSC_USER_DATA(X) (void *)(X)
 
 /// Definition of interrupt sense.
 typedef enum {

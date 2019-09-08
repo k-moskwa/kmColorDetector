@@ -21,11 +21,7 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
- *  References:
- *
  */
-
 
 #ifndef CONFIG_H_
 #define CONFIG_H_
@@ -79,7 +75,7 @@
 #define DEBUG_PIN_7 PC7
 /// Definition of the pin number showing the main status
 #define DEBUG_MAIN_PIN DEBUG_PIN_7
-/// Definition of the pin number shoing the button status
+/// Definition of the pin number showing the button status
 #define DEBUG_BUTTON_PIN DEBUG_PIN_6
 
 /// Direction register for button pin
@@ -91,7 +87,7 @@
 /// Button pin number
 #define BUTTON_PIN PC0
 
-#ifdef ATB_PROTOTYPE
+#ifndef ATB_PROTOTYPE
 /// Direction register for LCD display
 #define LCD_DDR DDRC
 /// Port register for LCD display
@@ -110,9 +106,9 @@
 #define STR_INTERNAL_BUFFERS_SIZE_OF LCD_COLS + 1
 
 /// Interval of the debug blink in Software Timer
-#define DEBUG_BLINK_INTERVAL 50 // 500 ms
+#define DEBUG_BLINK_INTERVAL 500 // 500 ms
 /// Interval of checking button state in Software Timer
-#define BUTTON_CHECK_INTERVAL 2 // 20 ms
+#define BUTTON_CHECK_INTERVAL 20 // 20 ms
 
 /// Maximum available color models
 #define KMCD_MAX_COLOR_MODELS 16
@@ -122,9 +118,12 @@
 /// Length of magic string
 #define KMCD_MAGIC_LENGTH 8
 
+/// Number of available software timers. To be adjusted to the needs.
+#define SWT_SIZE_OF 2
+
 // Automatic calculation of the ports depending on above values.
 // Do not alter this part unless you know what you do.
-#ifdef DEBUG
+#ifndef NDEBUG
 #define KMCD_NO_LCD
 #endif
 
