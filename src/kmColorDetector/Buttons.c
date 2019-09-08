@@ -33,6 +33,9 @@ static uint8_t _btnPin = 0;
 static bool _btnPreviousState = false;
 static bool _btnPressed = false;
 
+// "Private" functions
+bool btnGetState(void);
+
 // Implementation
 bool btnGetState(void) {
 #ifndef _TESTS_ENV

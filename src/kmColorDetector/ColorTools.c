@@ -29,17 +29,16 @@
 
 
 // Number of available color models
-#define COLOR_NORMAL_RESULT_BLACK_LEVEL 0x10
-#define COLOR_NORMAL_RESULT_WHITE_LEVEL 0xF0
 #define COLOR_NORMAL_RESULT_RANGE COLOR_NORMAL_RESULT_WHITE_LEVEL - COLOR_NORMAL_RESULT_BLACK_LEVEL
 
 static RgbColor16_t _blackLevel;
 static RgbColor16_t _whiteLevel;
-static RgbColor8_t *_colorModels;
+static const RgbColor8_t *_colorModels;
 static uint8_t _colorModelsSizeOf = 0;
 
 // "private" functions
 int32_t colorPow2(int32_t value);
+uint8_t colorNormalizeSingle(uint16_t source, uint16_t sourceBlackLevel, uint16_t sourceWhiteLevel);
 
 // Implementation
 void colorSetBlackReference(RgbColor16_t blackLevel) {
@@ -50,12 +49,18 @@ void colorSetWhiteReference(RgbColor16_t whiteLevel) {
 	_whiteLevel = whiteLevel;
 }
 
-void colorSetModels(RgbColor8_t *colorModels, uint8_t colorModelsAvailable) {
+void colorSetModels(const RgbColor8_t *colorModels, uint8_t colorModelsAvailable) {
 	_colorModels = colorModels;
 	_colorModelsSizeOf = colorModelsAvailable;
 }
 
 uint8_t colorNormalizeSingle(uint16_t source, uint16_t sourceBlackLevel, uint16_t sourceWhiteLevel) {
+	// result = 
+	// (source - sourceBlackLevel) * COLOR_NORMAL_RESULT_RANGE
+	// ------------------------------------------------------- + COLOR_NORMAL_RESULT_BLACK_LEVEL
+	//          (sourceWhiteLevel - sourceBlackLevel);
+	// where COLOR_NORMAL_RESULT_RANGE = COLOR_NORMAL_RESULT_WHITE_LEVEL - COLOR_NORMAL_RESULT_BLACK_LEVEL
+
 	int32_t tmp = source;
 	tmp -= sourceBlackLevel;
 	tmp *= COLOR_NORMAL_RESULT_RANGE;

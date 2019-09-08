@@ -33,61 +33,127 @@
 #include "TimerDefs.h"
 #include "SoftwareTimer.h"
 
+#define TCC2_TOP TCC_TOP_1
+
+// Internal definition of types.
 typedef struct {
 	bool enabled;
-	SmtValueType currentValue;
-	SwtCallback *_timer1Callback;
+	SwtValueType currentValue;
+	SwtCallback *_timerCallback;
 	void *userData;
 } swtItem;
 
+// "Private" global variables.
 static swtItem _timers[SWT_SIZE_OF];
+static volatile SwtValueType _mainInterval = 0;
+static volatile uint16_t _softPrescallerInit = 0;
+static volatile uint16_t _softPrescallerCurrent = 0;
 
-void swtInit(int32_t microseconds) {
+// "Private" functions.
+void timer2SetPeriod(int32_t miliseconds);
+
+// Implementation
+void swtInit(int16_t miliseconds) {
+	_mainInterval = miliseconds;
 	for (int i = 0; i < SWT_SIZE_OF; i++) {
 		_timers[i].enabled = false;
-		_timers[i]._timer1Callback = NULL;
+		_timers[i]._timerCallback = NULL;
 		_timers[i].currentValue = 0;
 	}
-	TCCR2 |= _BV(WGM21);
-	TCCR2 |= TCC2_PRSC_1024;
-	OCR2 = 108;
+	/// Timer2 mode 2 - CTC top value OCR2
+	TCCR2 |= TCC_2_MODE_2;
+	/// Timer/Counter2 Output Compare Match Interrupt Enable
 	TIMSK = _BV(OCIE2);
+	// set prescaler and OCR2
+	timer2SetPeriod(miliseconds);
+}
+
+void swtDisable(void) {
+	TCCR2 &= ~(TCC2_CS_MASK);
 }
 
 void swtLoop(void) {
 	for (int i = 0; i < SWT_SIZE_OF; i++) {
 		if (true == _timers[i].enabled && 0 == _timers[i].currentValue) {
-			_timers[i]._timer1Callback(_timers[i].userData, &_timers[i].currentValue);
-			if (_timers[i].currentValue == 0) {
-			_timers[i].enabled  = false;
+			SwtValueType newCurrent = 0;
+			_timers[i]._timerCallback(_timers[i].userData, &newCurrent);
+			if (0 == newCurrent) {
+				_timers[i].enabled = false;
 			}
+			_timers[i].currentValue = newCurrent / _mainInterval;
 		}
 	}
 }
 
-void swtRegisterCallback(uint8_t timerNo, void *userData, void (*callback)(void *, SmtValueType *)) {
+void swtRegisterCallback(uint8_t timerNo, void *userData, void (*callback)(void *, SwtValueType *)) {
 	_timers[timerNo].enabled = false;
 	_timers[timerNo].currentValue = 0;
-	_timers[timerNo]._timer1Callback = callback;
+	_timers[timerNo]._timerCallback = callback;
 	_timers[timerNo].userData = userData;
 }
 
 void swtUnregisterCallback(uint8_t timerNo) {
 	_timers[timerNo].enabled = false;
 	_timers[timerNo].currentValue = 0;
-	_timers[timerNo]._timer1Callback = NULL;
+	_timers[timerNo]._timerCallback = NULL;
 	_timers[timerNo].userData = NULL;
 }
 
-void swtStart(uint8_t timerNo, SmtValueType interval) {
+void swtStart(uint8_t timerNo, SwtValueType miliseconds) {
 	_timers[timerNo].enabled = true;
-	_timers[timerNo].currentValue = interval;
+	_timers[timerNo].currentValue = miliseconds / _mainInterval;
+}
+
+void timer2SetPeriod(int32_t miliseconds) {
+	int64_t cycles = (int64_t)(F_CPU);
+	cycles *= miliseconds;
+	cycles /= 1000ULL;
+	uint8_t timer2PrescalerSelectBits = 0;
+	if (cycles < TCC2_TOP) {
+		// no prescaler, full XTAL
+		timer2PrescalerSelectBits = TCC2_PRSC_1;
+		} else if ((cycles >>= 3) < TCC2_TOP) {
+		// prescaler by /8
+		timer2PrescalerSelectBits = TCC2_PRSC_8;
+		} else if ((cycles >>= 2) < TCC2_TOP) {
+		// prescaler by /32
+		timer2PrescalerSelectBits = TCC2_PRSC_32;
+		} else if ((cycles >>= 1) < TCC2_TOP) {
+		// prescaler by /64
+		timer2PrescalerSelectBits = TCC2_PRSC_64;
+		} else if ((cycles >>= 1) < TCC2_TOP) {
+		// prescaler by /128
+		timer2PrescalerSelectBits = TCC2_PRSC_128;
+		} else if ((cycles >>= 1) < TCC2_TOP) {
+		// prescaler by /256
+		timer2PrescalerSelectBits = TCC2_PRSC_256;
+		} else if ((cycles >>= 2) < TCC2_TOP) {
+		// prescaler by /1024
+		timer2PrescalerSelectBits = TCC2_PRSC_1024;
+		} else {
+		// use HW prescaler / 256 & soft prescaler to achieve 24 bit limit
+		timer2PrescalerSelectBits = TCC2_PRSC_256;
+		cycles = (int64_t)(F_CPU);	
+		cycles *= miliseconds;
+		cycles /= 1000ULL;
+		cycles >>= 8;
+		_softPrescallerInit = (cycles >> 8) & 0xFFFF;
+		cycles &= 0xFF;
+		}
+	OCR2 = cycles; // it should be already less than 0xFF
+	TCCR2 |= timer2PrescalerSelectBits;
+	return;
 }
 
 ISR(TIMER2_COMP_vect) {
-	for (int i = 0; i < SWT_SIZE_OF; i++) {
-		if (true == _timers[i].enabled && _timers[i].currentValue > 0) {
-			_timers[i].currentValue--;
+	if (_softPrescallerCurrent == 0) {
+		for (int i = 0; i < SWT_SIZE_OF; i++) {
+			if (true == _timers[i].enabled && _timers[i].currentValue > 0) {
+				_timers[i].currentValue--;
+			}
 		}
+		_softPrescallerCurrent = _softPrescallerInit;
+	} else {
+		_softPrescallerCurrent--;
 	}
 }

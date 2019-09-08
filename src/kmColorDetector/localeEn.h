@@ -20,12 +20,21 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
 #ifndef LOCALEEN_H_
 #define LOCALEEN_H_
 
-
+#define KMCD_INIT_STR		PSTR("kmColorDetector READY")
+#define KMCD_INIT_VERSION	PSTR("Version : ")
+#define KMCD_COLOR_WHITE	PSTR("white")
+#define KMCD_COLOR_BLACK	PSTR("black")
+#define KMCD_COLOR_RED		PSTR("red")
+#define KMCD_COLOR_GREEN	PSTR("green")
+#define KMCD_COLOR_BLUE		PSTR("blue")
+#define KMCD_COLOR_YELLOW	PSTR("yellow")
+#define KMCD_COLOR_BROWN	PSTR("brown")
+#define KMCD_COLOR_ORANGE	PSTR("orange")
+#define KMCD_MEASURE_START PSTR("Measure Start")
 
 #endif /* LOCALEEN_H_ */

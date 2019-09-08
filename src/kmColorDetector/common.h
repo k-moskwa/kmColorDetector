@@ -1,5 +1,5 @@
-/*
- * common.h
+/** @file
+ * @brief Headers for common project includes and definitions.
  *
  *  Created on: Aug 10, 2019
  *      Author: Krzysztof Moskwa
@@ -20,11 +20,7 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
- *  References:
- *
  */
-
 
 #ifndef COMMON_H_
 #define COMMON_H_

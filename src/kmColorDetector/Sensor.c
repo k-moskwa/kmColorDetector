@@ -207,3 +207,8 @@ void tscRegisterCallbackMeasureFinished(TscCallback *callback, void *userData) {
 	_tscCallback = callback;
 }
 
+void tscUnregisterCallbackMeasureFinished(void) {
+	_tscCallbackUserData = NULL;
+	_tscCallback = NULL;
+}
+

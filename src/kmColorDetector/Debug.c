@@ -191,15 +191,16 @@ void dbMeasureToLCD(void)  {
     RgbColor8_t colorNorm = colorNormalize(colorOrg);
     uint8_t colorNumber = colorFindNearest(colorNorm);
     char tmpBuffer[40];
-    sprintf(tmpBuffer, "R:%X, G:%X, B:%X; ", colorNorm.r, colorNorm.g, colorNorm.b);
-    serPrintString(tmpBuffer);
+    sprintf(tmpBuffer, "R:%X,G:%X,B:%X", colorNorm.r, colorNorm.g, colorNorm.b);
 
     lcdSetCursor(0, 0);
     lcdPrint(tmpBuffer);
+    lcdFillSpacesToEndOfTheLine();
+
     lcdSetCursor(0, 1);
-    lcdPrint_P(PSTR("C:"));
+    lcdPrint_P(PSTR("C"));
     lcdWrite('0' + colorNumber);
-    lcdWrite(' ');
+    lcdPrint_P(PSTR(": "));
     switch (colorNumber) {
         case 0 : {
             lcdPrint_P(KMCD_COLOR_WHITE);

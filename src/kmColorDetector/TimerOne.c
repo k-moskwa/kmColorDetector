@@ -25,6 +25,7 @@
 
 #include <stdlib.h>
 #include <avr/interrupt.h>
+#include <util/atomic.h>
 
 #include "TimerOne.h"
 #include "Debug.h"
@@ -32,8 +33,8 @@
 #define TCC1_TOP TCC_TOP_3
 
 static uint8_t _timer1PrescalerSelectBits = 0;
-static uint16_t _timer1PwmPeriod = 0;
-static Timer1Callback *_timer1Callback = NULL;
+static uint16_t _timer1PwmCycles = 0;
+static Timer1Callback *_timerCallback = NULL;
 static void *_timer1CallbackUserData = NULL;
 
 void timer1Start(void) {
@@ -50,48 +51,45 @@ void timer1Restart(void) {
 
 void timer1SetPeriod(int32_t microseconds) {
 	// the counter runs backwards after TOP, interrupt is at BOTTOM so divide microseconds by 2
-	//int64_t cycles = (int64_t)(F_CPU * microseconds) / 2000000ULL;
 	int64_t cycles = (int64_t)(F_CPU);
 	cycles *= microseconds;
 	cycles /= 2000000ULL;
-	if (cycles < TCC1_TOP) {
-		// no prescale, full xtal
+	if (cycles < TCC_TOP_3) {
+		// no prescaler, full xtal
 		_timer1PrescalerSelectBits = TCC1_PRSC_1;
-	} else if ((cycles >>= 3) < TCC1_TOP) {
-		// prescale by /8
+	} else if ((cycles >>= 3) < TCC_TOP_3) {
+		// prescaler by /8
 		_timer1PrescalerSelectBits = TCC1_PRSC_8;
-	} else if ((cycles >>= 3) < TCC1_TOP) {
-		// prescale by /64
+	} else if ((cycles >>= 3) < TCC_TOP_3) {
+		// prescaler by /64
 		_timer1PrescalerSelectBits = TCC1_PRSC_64;
-	} else if ((cycles >>= 2) < TCC1_TOP) {
-		// prescale by /256
+	} else if ((cycles >>= 2) < TCC_TOP_3) {
+		// prescaler by /256
 		_timer1PrescalerSelectBits = TCC1_PRSC_256;
 	} else if ((cycles >>= 2) < TCC1_TOP) {
-		// prescale by /1024
+		// prescaler by /1024
 		_timer1PrescalerSelectBits = TCC1_PRSC_1024;
 	} else {
 		// request was out of bounds, set as maximum
 		_timer1PrescalerSelectBits = TCC1_PRSC_1024;
-		cycles = TCC1_TOP - 1;
+		cycles = TCC1_TOP;
 	}
-	_timer1PwmPeriod = cycles;
-	ICR1 = _timer1PwmPeriod;
+	_timer1PwmCycles = cycles;
+	ICR1 = _timer1PwmCycles;
 	 // reset prescaler bits
 	timer1Stop();
-	// set calculated prescaler bits
-	//timer1Start();
 }
 
 void timer1Init(int32_t microseconds) {
 	// clear control register A
-	TCCR1A = 0;
-	// set mode as phase and frequency correct pwm, stop the timer
-	TCCR1B = _BV(WGM13);
+	// Set Timer1 mode 8 - PWM, Phase and Frequency Correct with ICR1 as top
+	TCCR1A = TCC_1_MODE_8_A;
+	TCCR1B = TCC_1_MODE_8_B;
 	timer1SetPeriod(microseconds);
 }
 
 void timer1SetPwmDuty(Tcc1PwmOut pwmOut, uint16_t duty) {
-	uint32_t dutyCycle = _timer1PwmPeriod * duty;
+	uint32_t dutyCycle = _timer1PwmCycles * duty;
 	dutyCycle >>= 10;
 	switch (pwmOut) {
 		case TCC1_PWM_OUT_A: {
@@ -157,16 +155,18 @@ void timer1DisableInterrupt(void) {
 }
 
 void timer1RegisterCallback(Timer1Callback *callback, void *userData) {
-	_timer1Callback = callback;
+	_timerCallback = callback;
 	_timer1CallbackUserData = userData;
 }
 
 void timer1SetCallbackUserData(void *userData)  {
-	_timer1CallbackUserData = userData;
+     ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
+		_timer1CallbackUserData = userData;
+	}
 }
 
 ISR(TIMER1_OVF_vect) {
-	if (_timer1Callback != NULL) {
-		_timer1Callback(_timer1CallbackUserData);
+	if (_timerCallback != NULL) {
+		_timerCallback(_timer1CallbackUserData);
 	}
 }

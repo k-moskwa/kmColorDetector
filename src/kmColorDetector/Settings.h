@@ -39,33 +39,24 @@ Initializes routines and variable responsible for button operations.
 Following definitions to be set in config.h file @n
 #define \b KMSG_MAGIC string that defines module and version allowing to preserve and update settings between versions (e.g. "KMSG100")@n
 #define \b KMSG_MAGIC_LENGTH number of bytes in magic string defined in KMSG_MAGIC (e.g. 8 in above example last byte is '\0' so it's 8 bytes)@n
-#define \b KMSG_MAX_PRESETS number of presets that can be stored in EEPROM (e.g. 5)@n
-#define \b DEFAULT_FREQUENCY default frequency of the signal generator after power up of the system in Hz multiplied by 1000 (e.g. 1000000000 for 1MHz)@n
-#define \b DEFAULT_WAVE_TYPE UI_SIG_SQUARE default wave type of the signalr generator after power up of the system (e.g. UI_SIG_SQUARE)@n
-#define \b DEFAULT_FREQUENCY_PRESET1 to DEFAULT_FREQUENCY_PRESET1 default preset 1 to 4 of signal generator frequency (e.g. 985248000)@n
-#define \b DEFAULT_WAVE_TYPE_PRESET1 to DEFAULT_WAVE_TYPE_PRESET1 default wave type of preset 1 to 4 (e.g. UI_SIG_SQUARE)@n
 NOTE: To preserve EEPROM settings make sure EESAVE fuse bit is correctly defined (EESAVE = 0)@n
 In this version once EEPROM is erased or has different magic value than defined in KMSG_MAGIC then values are overwritten with default presets 1 to 4
 */
 void settingsInit(void);
-#if 1
-RgbColor8_t settingsGetColorModel(uint8_t colorNumber);
-RgbColor8_t *settingsGetColorModels(void);
 
-#else
 /**
 Returns preset of presetNumber to waveType and frequency result variables.
-@param colorNumber number of preset to be returned (0 to KMCD_MAX_PRESETS)
-@result HSV color model of specific number
 NOTE: in case KMSG_NO_EEPROM is defined then values are not taken from EEPROM but just from predefined default presets
+@param colorNumber number of preset to be returned (0 to KMCD_MAX_PRESETS)
+@result RGB color model of specific number
 */
-HsvColor8_t settingsGetColorModel(uint8_t colorNumber);
+RgbColor8_t settingsGetColorModel(uint8_t colorNumber);
 
 /**
 @result
 */
-HsvColor8_t *settingsGetColorModels(void);
-#endif
+RgbColor8_t *settingsGetColorModels(void);
+
 /**
 @param colorNumber
 @param colorModel

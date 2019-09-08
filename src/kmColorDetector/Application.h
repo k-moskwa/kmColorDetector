@@ -21,9 +21,6 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
- *  References:
- *
  */
 
 
@@ -42,7 +39,5 @@ void appInit(void);
 Main application loop routine to be issued periodically without delay.
 */
 void appLoop(void);
-
-
 
 #endif /* APPLICATION_H_ */

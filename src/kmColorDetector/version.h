@@ -28,7 +28,7 @@
 #define VERSION_H_
 
 #define APP_NAME	"kmColDecDR"
-#define APP_VERSION	"0.1.0"
+#define APP_VERSION	"0.9.0"
 #define APP_YEAR	"2019"
 #define APP_AUTHOR	"Krzysztof Moskwa"
 

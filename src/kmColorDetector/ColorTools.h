@@ -34,70 +34,101 @@
 
 #include <stdlib.h>
 
+/// Normalization result for black referent level
+#define COLOR_NORMAL_RESULT_BLACK_LEVEL 0x10
+/// Normalization result for defined white reference level
+#define COLOR_NORMAL_RESULT_WHITE_LEVEL 0xF0
+
 /**
+Definition of structure for storing RGB color in 8 bit unsigned integers.
 */
 typedef struct {
+	/// Red component.
 	uint8_t r;
+	/// Green component.
 	uint8_t g;
+	/// Blue component.
 	uint8_t b;
 } RgbColor8_t;
 
 /**
+Definition of structure for storing RGB color in 16 bit unsigned integers.
 */
 typedef struct {
-	uint8_t h;
-	uint8_t s;
-	uint8_t v;
-} HsvColor8_t;
-
-/**
-*/
-typedef struct {
+	/// Red component.
 	uint16_t r;
+	/// Green component.
 	uint16_t g;
+	/// Blue component.
 	uint16_t b;
 } RgbColor16_t;
 
 /**
-@param blackLevel
+Definition of structure for storing color in HSV model in 8 bit unsigned integers.
+*/
+typedef struct {
+	/// Hue component. 0x00 means 0 degrees, 0xFF means 360 degrees.
+	uint8_t h;
+	/// Saturation component. 0x00 means no saturation, 0xFF means maximum saturation.
+	uint8_t s;
+	/// Value component. 0x00 means lowest luminance, 0xFF means highest luminance.
+	uint8_t v;
+} HsvColor8_t;
+
+/**
+Setts the black reference level for calculation of the normalized color value with #colorNormalize function.
+@param blackLevel Black reference level defined as 16 bit integer.
 */
 void colorSetBlackReference(RgbColor16_t blackLevel);
 
 /**
-@param whiteLevel
+Setts the white reference level for calculation of the normalized color value, with #colorNormalize function.
+@param whiteLevel White reference level defined as 16 bit integer.
 */
 void colorSetWhiteReference(RgbColor16_t whiteLevel);
 
 /**
-@param colorModels
-@param colorModelsAvailable
+Returns normalized 8 bit RGB color based on provided 16bit RAW RGB 
+value and defined black and white reference colors.
+Following preprocessor values are used for calculations@n
+#define \b #COLOR_NORMAL_RESULT_BLACK_LEVEL as normalization result for black referent level@n
+#define \b #COLOR_NORMAL_RESULT_WHITE_LEVEL as normalization result for white referent level@n
+@param sourceColor Source 16bit integer RGB color from the sensor that needs to be normalized
+@result normalized Normalized color returned as 8bit integer RGB 
 */
-void colorSetModels(RgbColor8_t *colorModels, uint8_t colorModelsAvailable);
+RgbColor8_t colorNormalize(RgbColor16_t sourceColor);
+
 
 /**
-@param source
-@param sourceBlackLevel
-@param sourceWhiteLevel
+Defines array of color models to be used in #colorFindNearest function.
+Function does not check the integrity or array size so the array needs to have 
+at least #colorModelsAvailable number of elements. @n
+\b NOTE!!! Only the reference of the array is stored in the internal structures 
+for saving memory, so these values should not be altered after setting it here.
+@param colorModels Array of RGB color models with number of elements at least equal colorModelsAvailable.
+@param colorModelsAvailable Number of colors in the colorModels array.
 */
-uint8_t colorNormalizeSingle(uint16_t source, uint16_t sourceBlackLevel, uint16_t sourceWhiteLevel);
+void colorSetModels(const RgbColor8_t *colorModels, uint8_t colorModelsAvailable);
 
 /**
-@param sourceColor
+Finds nearest color from the color array defined by #colorSetModels functions.
+Function uses mean square error for finding nearest color.
+@param sourceColor normalized source color.
+@result number of color in the color models table that is nearest to provided sourceColor.
 */
 uint8_t colorFindNearest(RgbColor8_t sourceColor);
 
 /**
-@param sourceColor
-*/
-RgbColor8_t colorNormalize(RgbColor16_t sourceColor);
-
-/**
-@param hsv
+Converts color from 8-bit HSV color model to 8-bit RGB color model 
+@param hsv source color in 8-bit HSV color model
+@result result color in 8-bit RGB color model
 */
 RgbColor8_t colorHsvToRgb(HsvColor8_t hsv);
 
 /**
-@param rgb
+Converts color from 8-bit RGB color model to 8-bit HSV color model
+@param hsv source color in 8-bit RGB color model
+@result result color in 8-bit HSV color model
 */
 HsvColor8_t colorRgbToHsv(RgbColor8_t rgb);
 
