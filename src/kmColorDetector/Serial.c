@@ -458,6 +458,44 @@ void serTermCursorHome(void) {
 	serPrintString_P(SER_TERM_CURSOR_HOME);
 }
 
+void serTermTextColor(SerTermColor color) {
+	char colorAscii = color < 8 ? '0' + color : '0' + color - 8;
+	serPrintString_P(PSTR("\e[3"));
+	serWriteChar(colorAscii);
+	if (color < 8 ) {
+		serWriteChar('m');
+	} else {
+		serPrintString_P(PSTR(";1m"));
+	}
+}
+
+void serTermBackColor(SerTermColor color) {
+	char colorAscii = color < 8 ? '0' + color : '0' + color - 8;
+	serPrintString_P(PSTR("\e[4"));
+	serWriteChar(colorAscii);
+	serWriteChar('m');
+}
+
+void serTermResetAttributes(void) {
+	serPrintString_P(PSTR("\e[0m"));
+}
+
+void serTermBold(void) {
+	serPrintString_P(PSTR("\e[1m"));
+}
+
+void serTermFaint(void) {
+	serPrintString_P(PSTR("\e[2m"));
+}
+
+void serTermUnderline(void) {
+	serPrintString_P(PSTR("\e[4m"));
+}
+
+void serTermBlink(void) {
+	serPrintString_P(PSTR("\e[5m"));
+}
+
 ISR( USART_RXC_vect ) {
     irqRx();
 }

@@ -49,8 +49,6 @@ void callbackDebugLed(void *userData, SwtValueType *newTimerValue);
 void callbackButton(void *userData, SwtValueType *newTimerValue);
 void callbackSensorMeasureReady(void *userData);
 
-void dbMeasureToSerial(void);
-
 // Implementation
 void appInit(void) {
 	// Initialize all available ports as pull-up inputs

@@ -42,6 +42,42 @@
 
 #include "SerialDefs.h"
 
+/// Terminal color definitions.
+typedef enum {
+/// Black
+	  SerTermBlack = 0
+/// Red
+	, SerTermRed = 1
+/// Green
+	, SerTermGreen = 2
+/// Yellow
+	, SerTermYellow = 3
+/// Blue
+	, SerTermBlue = 4
+/// Magenta
+	, SerTermMagenta = 5
+/// Cyan
+	, SerTermCyan = 6
+/// White
+	, SerTermWhite = 7
+/// Dark Gray (only for text)
+	, SerTermBrightBlack = 8
+/// Bright Red (only for text)
+	, SerTermBrightRed = 9
+/// Bright Green (only for text)
+	, SerTermBrightGreen = 10
+/// Bright Yellow (only for text)
+	, SerTermBrightYellow = 11
+/// Bright Blue (only for text)
+	, SerTermBrightBlue = 12
+/// Bright Magenta (only for text)
+	, SerTermBrightMagenta = 13
+/// Bright Cyan (only for text)
+	, SerTermBrightCyan = 14
+/// Bright White (only for text)
+	, SerTermBrightWhite = 15
+} SerTermColor;
+
 /**
 Simplified initialization of the Hardware Serial interface with specific baud rate.
 It uses 8 bit transmission with 1 stop bit and no parity check 
@@ -199,5 +235,42 @@ void serTermClearScreen(void);
 Sends terminal command to position cursor in home location (top left corner).
 */
 void serTermCursorHome(void);
+
+/**
+Sets ANSI text color in the terminal.
+@param color The color of the text from now on.
+*/
+void serTermTextColor(SerTermColor color);
+
+/**
+Sets ANSI background color in the terminal.
+@param color The color of the background from now on.
+*/
+void serTermBackColor(SerTermColor color);
+
+/**
+Resets ANSI attributes of background and text color.
+*/
+void serTermResetAttributes(void);
+
+/**
+Sets ANSI text to bold / intensive color.
+*/
+void serTermBold(void);
+
+/**
+Sets ANSI text to faint color.
+*/
+void serTermFaint(void);
+
+/**
+Sets ANSI text to underline.
+*/
+void serTermUnderline(void);
+
+/**
+Sets ANSI text to blink. In PuTTY it changes background color.
+*/
+void serTermBlink(void);
 
 #endif /* SERIAL_H_ */

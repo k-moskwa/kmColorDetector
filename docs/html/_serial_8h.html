@@ -63,6 +63,7 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#enum-members">Enumerations</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">Serial.h File Reference</div>  </div>
@@ -80,6 +81,33 @@ $(function() {
 </div>
 <p><a href="_serial_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
+Enumerations</h2></td></tr>
+<tr class="memitem:a4a625898b90facf14a6d1b0a1dd48197"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_serial_8h.html#a4a625898b90facf14a6d1b0a1dd48197">SerTermColor</a> { <br />
+&#160;&#160;<a class="el" href="_serial_8h.html#a4a625898b90facf14a6d1b0a1dd48197a3b58c086c74af08229466dac6858a03e">SerTermBlack</a> = 0, 
+<b>SerTermRed</b> = 1, 
+<b>SerTermGreen</b> = 2, 
+<b>SerTermYellow</b> = 3, 
+<br />
+&#160;&#160;<b>SerTermBlue</b> = 4, 
+<b>SerTermMagenta</b> = 5, 
+<b>SerTermCyan</b> = 6, 
+<b>SerTermWhite</b> = 7, 
+<br />
+&#160;&#160;<b>SerTermBrightBlack</b> = 8, 
+<b>SerTermBrightRed</b> = 9, 
+<b>SerTermBrightGreen</b> = 10, 
+<b>SerTermBrightYellow</b> = 11, 
+<br />
+&#160;&#160;<b>SerTermBrightBlue</b> = 12, 
+<b>SerTermBrightMagenta</b> = 13, 
+<b>SerTermBrightCyan</b> = 14, 
+<b>SerTermBrightWhite</b> = 15
+<br />
+ }</td></tr>
+<tr class="memdesc:a4a625898b90facf14a6d1b0a1dd48197"><td class="mdescLeft">&#160;</td><td class="mdescRight">Terminal color definitions.  <a href="_serial_8h.html#a4a625898b90facf14a6d1b0a1dd48197">More...</a><br /></td></tr>
+<tr class="separator:a4a625898b90facf14a6d1b0a1dd48197"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a0276081f690791cf20237b5bf5f985f2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_serial_8h.html#a0276081f690791cf20237b5bf5f985f2">serInit</a> (unsigned long baud)</td></tr>
@@ -158,6 +186,31 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_ser
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_serial_8h.html#aeea2b2f0585dd36bc5b2427b84eb9e59">serTermCursorHome</a> (void)</td></tr>
 <tr class="memdesc:aeea2b2f0585dd36bc5b2427b84eb9e59"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends terminal command to position cursor in home location (top left corner). <br /></td></tr>
 <tr class="separator:aeea2b2f0585dd36bc5b2427b84eb9e59"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5ceea586123dac31c2d706e7ad6317de"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_serial_8h.html#a5ceea586123dac31c2d706e7ad6317de">serTermTextColor</a> (<a class="el" href="_serial_8h.html#a4a625898b90facf14a6d1b0a1dd48197">SerTermColor</a> color)</td></tr>
+<tr class="memdesc:a5ceea586123dac31c2d706e7ad6317de"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets ANSI text color in the terminal.  <a href="#a5ceea586123dac31c2d706e7ad6317de">More...</a><br /></td></tr>
+<tr class="separator:a5ceea586123dac31c2d706e7ad6317de"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a580430cc385a904f9caf6796a84c343f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_serial_8h.html#a580430cc385a904f9caf6796a84c343f">serTermBackColor</a> (<a class="el" href="_serial_8h.html#a4a625898b90facf14a6d1b0a1dd48197">SerTermColor</a> color)</td></tr>
+<tr class="memdesc:a580430cc385a904f9caf6796a84c343f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets ANSI background color in the terminal.  <a href="#a580430cc385a904f9caf6796a84c343f">More...</a><br /></td></tr>
+<tr class="separator:a580430cc385a904f9caf6796a84c343f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9971f55af7dcfeef6e8580c28ed12eb9"><td class="memItemLeft" align="right" valign="top"><a id="a9971f55af7dcfeef6e8580c28ed12eb9"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_serial_8h.html#a9971f55af7dcfeef6e8580c28ed12eb9">serTermResetAttributes</a> (void)</td></tr>
+<tr class="memdesc:a9971f55af7dcfeef6e8580c28ed12eb9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resets ANSI attributes of background and text color. <br /></td></tr>
+<tr class="separator:a9971f55af7dcfeef6e8580c28ed12eb9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adf9e6bd61529c4370f8170cf275a2472"><td class="memItemLeft" align="right" valign="top"><a id="adf9e6bd61529c4370f8170cf275a2472"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_serial_8h.html#adf9e6bd61529c4370f8170cf275a2472">serTermBold</a> (void)</td></tr>
+<tr class="memdesc:adf9e6bd61529c4370f8170cf275a2472"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets ANSI text to bold / intensive color. <br /></td></tr>
+<tr class="separator:adf9e6bd61529c4370f8170cf275a2472"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad1b1c0d93dcfa5e3d28385901be03953"><td class="memItemLeft" align="right" valign="top"><a id="ad1b1c0d93dcfa5e3d28385901be03953"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_serial_8h.html#ad1b1c0d93dcfa5e3d28385901be03953">serTermFaint</a> (void)</td></tr>
+<tr class="memdesc:ad1b1c0d93dcfa5e3d28385901be03953"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets ANSI text to faint color. <br /></td></tr>
+<tr class="separator:ad1b1c0d93dcfa5e3d28385901be03953"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae1279bdaa49ed7dd02bf53e5d30ccf67"><td class="memItemLeft" align="right" valign="top"><a id="ae1279bdaa49ed7dd02bf53e5d30ccf67"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_serial_8h.html#ae1279bdaa49ed7dd02bf53e5d30ccf67">serTermUnderline</a> (void)</td></tr>
+<tr class="memdesc:ae1279bdaa49ed7dd02bf53e5d30ccf67"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets ANSI text to underline. <br /></td></tr>
+<tr class="separator:ae1279bdaa49ed7dd02bf53e5d30ccf67"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abde7ebae22efdcd721330c1654e8c64b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_serial_8h.html#abde7ebae22efdcd721330c1654e8c64b">serTermBlink</a> (void)</td></tr>
+<tr class="memdesc:abde7ebae22efdcd721330c1654e8c64b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets ANSI text to blink.  <a href="#abde7ebae22efdcd721330c1654e8c64b">More...</a><br /></td></tr>
+<tr class="separator:abde7ebae22efdcd721330c1654e8c64b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Functions for hardware serial implementation <a class="el" href="_serial_8h.html" title="Functions for hardware serial implementation Serial.h.">Serial.h</a>. </p>
@@ -173,7 +226,28 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_ser
 <li><a href="https://appelsiini.net/2011/simple-usart-with-avr-libc/">https://appelsiini.net/2011/simple-usart-with-avr-libc/</a></li>
 <li><a href="https://pidpawel.eu/post/makra-sbi-cbi-tbi-dla-avr.html">https://pidpawel.eu/post/makra-sbi-cbi-tbi-dla-avr.html</a> </li>
 </ol>
-</div><h2 class="groupheader">Function Documentation</h2>
+</div><h2 class="groupheader">Enumeration Type Documentation</h2>
+<a id="a4a625898b90facf14a6d1b0a1dd48197"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4a625898b90facf14a6d1b0a1dd48197">&#9670;&nbsp;</a></span>SerTermColor</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="_serial_8h.html#a4a625898b90facf14a6d1b0a1dd48197">SerTermColor</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Terminal color definitions. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a4a625898b90facf14a6d1b0a1dd48197a3b58c086c74af08229466dac6858a03e"></a>SerTermBlack&#160;</td><td class="fielddoc"><p>Black. </p>
+</td></tr>
+</table>
+
+</div>
+</div>
+<h2 class="groupheader">Function Documentation</h2>
 <a id="a49d9bd0eeefb49315f231d4a011f134f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a49d9bd0eeefb49315f231d4a011f134f">&#9670;&nbsp;</a></span>serAvailable()</h2>
 
@@ -677,6 +751,79 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_ser
 ' for regular ASCII transmission. Useful for AT+ commands. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">terminator</td><td>single character to be used as line terminator. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a580430cc385a904f9caf6796a84c343f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a580430cc385a904f9caf6796a84c343f">&#9670;&nbsp;</a></span>serTermBackColor()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void serTermBackColor </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="_serial_8h.html#a4a625898b90facf14a6d1b0a1dd48197">SerTermColor</a>&#160;</td>
+          <td class="paramname"><em>color</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Sets ANSI background color in the terminal. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">color</td><td>The color of the background from now on. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="abde7ebae22efdcd721330c1654e8c64b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abde7ebae22efdcd721330c1654e8c64b">&#9670;&nbsp;</a></span>serTermBlink()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void serTermBlink </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Sets ANSI text to blink. </p>
+<p>In PuTTY it changes background color. </p>
+
+</div>
+</div>
+<a id="a5ceea586123dac31c2d706e7ad6317de"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5ceea586123dac31c2d706e7ad6317de">&#9670;&nbsp;</a></span>serTermTextColor()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void serTermTextColor </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="_serial_8h.html#a4a625898b90facf14a6d1b0a1dd48197">SerTermColor</a>&#160;</td>
+          <td class="paramname"><em>color</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Sets ANSI text color in the terminal. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">color</td><td>The color of the text from now on. </td></tr>
   </table>
   </dd>
 </dl>

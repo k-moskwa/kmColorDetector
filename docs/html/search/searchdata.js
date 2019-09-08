@@ -6,8 +6,8 @@ var indexSectionsWithContent =
   3: "abcdelst",
   4: "bghrsv",
   5: "est",
-  6: "et",
-  7: "et",
+  6: "est",
+  7: "est",
   8: "abcdeklpst"
 };
 

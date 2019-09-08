@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['tcc1pwmout',['Tcc1PwmOut',['../_timer_one_8h.html#a9d9cdd11b5a6de5c56b0cf103c9ebdae',1,'TimerOne.h']]]
+  ['sertermcolor',['SerTermColor',['../_serial_8h.html#a4a625898b90facf14a6d1b0a1dd48197',1,'Serial.h']]]
 ];
