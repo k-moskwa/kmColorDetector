@@ -36,10 +36,6 @@
 #include <avr/interrupt.h>
 #include <avr/pgmspace.h>
 
-#ifndef KMCD_NO_LCD
-#include "LiquidCrystal.h"
-#endif
-
 #undef BAUD
 #define BAUD PLYR_SERIAL_BAUD_RATE
 #include <util/setbaud.h>
@@ -78,6 +74,10 @@ static volatile int _txBufferGetIndex = 0;
 static volatile int _txBufferPutIndex = 0;
 static volatile int _txBufferLength = 0;
 
+// Terminal commands
+#define SER_TERM_CLEAR_SCREEN PSTR("\e[2J")
+#define SER_TERM_CURSOR_HOME PSTR("\e[H")
+
 // Private "functions"
 void rxStore(uint8_t c);
 int rxAvailable(void);
@@ -92,20 +92,16 @@ int txPeek(void);
 int txRead(void);
 void txFlush(void);
 
-// Interrupt handler
-void irqTx(void);
-void irqRx(void);
-
 void serSetup(
 volatile uint8_t *ubrrh, volatile uint8_t *ubrrl,
 volatile uint8_t *ucsra, volatile uint8_t *ucsrb,
 volatile uint8_t *ucsrc, volatile uint8_t *udr);
 
-// Implementation
-void serSetTerminationCharacter(unsigned char terminator) {
-    _rxTerminationChar = terminator;
-}
+// Interrupt handler
+void irqTx(void);
+void irqRx(void);
 
+// Internal RX/TX buffer operations
 void rxStore(uint8_t c) {
     if (_rxTerminationChar == c) {
         _rxBufferLines++;
@@ -184,7 +180,6 @@ void txFlush(void) {
 
 // Interrupt handler
 void irqTx(void) {
-    dbToggle(7);
     // If interrupts are enabled, there must be more data in the output
     // buffer. Send the next byte
     if (txAvailable() > 0) {
@@ -221,6 +216,11 @@ void irqRx(void) {
     }
 }
 
+// Implementation
+void serSetTerminationCharacter(unsigned char terminator) {
+	_rxTerminationChar = terminator;
+}
+
 void serSetup(
 volatile uint8_t *ubrrh, volatile uint8_t *ubrrl,
 volatile uint8_t *ucsra, volatile uint8_t *ucsrb,
@@ -237,14 +237,17 @@ void serInitComplete(unsigned long baud, uint8_t config) {
     serSetup(&UBRRH, &UBRRL, &UCSRA, &UCSRB, &UCSRC, &UDR);
     _written = false;
 
-    *_ubrrh = UBRRH_VALUE;
-    *_ubrrl = UBRRL_VALUE;
+	#define __UBRR F_CPU/16/UART_BAUD-1 
+	uint16_t baud_setting = (F_CPU / 4 / baud - 1) / 2;
+	if (baud_setting > 0xFFF) {
+		baud_setting /= 2;
+	    *_ucsra &= ~_BV(U2X);
+	} else {
+	    *_ucsra |= _BV(U2X);
+	}
 
-#if USE_2X
-    *_ucsra |= _BV(U2X);
-#else
-    *_ucsra &= ~_BV(U2X);
-#endif
+    *_ubrrh =  baud_setting >> 8;
+    *_ubrrl =  baud_setting & 0xFF;
 
 #if defined(__AVR_ATmega8__) || defined(__AVR_ATmega16__) || defined(__AVR_ATmega32__)
     config |= _BV(URSEL); // select UCSRC register (shared with UBRRH)
@@ -284,7 +287,6 @@ void serEnd(void) {
     *_ucsrb &= ~_BV(RXEN);
     *_ucsrb &= ~_BV(TXEN);
     *_ucsrb &= ~_BV(RXCIE);
-    //*_ucsrb &= ~_BV(RXCIE);
 
     rxFlush();
 }
@@ -446,6 +448,14 @@ void serSendBinary(const uint8_t *buf, uint8_t len) {
     for (int i = 0; i < len; i++) {
         serWriteChar((unsigned char)buf[i]);
     }
+}
+
+void serTermClearScreen(void) {
+	serPrintString_P(SER_TERM_CLEAR_SCREEN);
+}
+
+void serTermCursorHome(void) {
+	serPrintString_P(SER_TERM_CURSOR_HOME);
 }
 
 ISR( USART_RXC_vect ) {

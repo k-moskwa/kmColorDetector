@@ -43,109 +43,161 @@
 #include "SerialDefs.h"
 
 /**
-@param terminator
-*/
-void serSetTerminationCharacter(unsigned char terminator);
-
-/**
-@param baud
+Simplified initialization of the Hardware Serial interface with specific baud rate.
+It uses 8 bit transmission with 1 stop bit and no parity check 
+@param baud Speed of transmission.
 */
 void serInit(unsigned long baud);
 
 /**
-@param baud
-@param config
+Initialization of the Hardware Serial interface with specific baud rate and configuration.
+@param baud Speed of transmission.
+@param config Serial configuration of transmission as defined in SerialDefs.h file
 */
 void serInitComplete(unsigned long baud, uint8_t config);
 
 /**
+Makes sure that all data in transmission serial buffer are transmitted.
+Waits until transmission buffer is empty and data are transferred. 
 */
 void serFlush(void);
 
 /**
+Flushes existing transmission buffer then closes serial transmission,
+serial receiver buffer is also cleared.
 */
 void serEnd(void);
 
 /**
+Returns available bytes in the serial receive buffer.
+@result available bytes in the serial receive buffer.
 */
 int serAvailable(void);
 
 /**
+Peeks for the next character in the serial buffer without changing buffer status.
+Returns -1 in case buffer is empty.
+@result Next character in serial receive buffer or -1 in case buffer is empty.
 */
 int serPeek(void);
 
 /**
+Gets the next character in the serial buffer. Returns -1 in case buffer is empty.
+@result Next character in serial receive buffer or -1 in case buffer is empty.
 */
 int serRead(void);
 
 /**
+Define character to be used as line terminator for #serAvailableLines and #serReadLine functions.
+Default value is '\n' for regular ASCII transmission. Useful for AT+ commands.
+@param terminator single character to be used as line terminator.
+*/
+void serSetTerminationCharacter(unsigned char terminator);
+
+/**
+Returns available lines in serial receive buffer separated 
+by character defined in #serSetTerminationCharacter function.
+@result available lines in serial receive buffer.
 */
 int serAvailableLines(void);
 
 /**
-@param buf
-@param maxLen
+Copies the next line from serial receive buffer to buf variable.
+The length of copy is limited to maxLen value to avoid buffer overflows.
+@result buf Target buffer to which content of the next line from Serial receive buffer will be copied.
+@param maxLen Maximum length of the copied buffer. To be set to the available buffer length.
 */
 void serReadLine(char *buf, uint8_t maxLen);
 
 /**
+Returns number of available bytes in the serial transmission buffer.
+Allows to react to situation ween buffer is full in the main program.
+The serial interface automatically handles it also in all write function anyway.
+@result Number of bytes currently available in transmission buffer.
 */
 int serAvailableForWrite(void);
 
 /**
-@param c
+Writes single character to the serial interface.
+@param c Single character to be sent to serial interface.
+@result Returns 1 in case character has been sent or buffered.
 */
 size_t serWriteChar(uint8_t c);
 
 /**
-@param str
+Sends string terminated by '\0' to serial interface.
+@param str String to be sent to serial interface.
 */
 void serPrintString(const char *str);
 
 /**
-@param str
+Sends string from program memory terminated by '\0' to serial interface.
+@param str String in program memory to be sent to serial interface.
 */
 void serPrintString_P(const char *str);
 
 /**
+Sends line termination characters to serial interface.
 */
 void serPrintLn(void);
 
 /**
-@param str
+Sends string terminated by '\0' to serial interface and ends it with line termination.
+@param str String to be sent to serial interface.
 */
 void serPrintLnString(const char *str);
 
 /**
-@param str
+Sends string from program memory terminated by '\0' to serial interface
+and ends it with line termination.
+@param str String in program memory to be sent to serial interface.
 */
 void serPrintLnString_P(const char *str);
 
 /**
-@param n
-@param base
+Sends specific number converted to base value to the serial interface.
+The conversion is done by itoa() function.
+@param n Numeric value.
+@param base Base of the numeric value to be converted to.
 */
 void serPrintNumber(unsigned long n, uint8_t base);
 
 /**
-@param n
+Sends specific number as HEX value prefixed with "0x" to serial interface.
+@param n Numeric value.
 */
 void serPrintHex(unsigned long n);
 
 /**
-@param n
+Sends specific number as DEC value (not prefixed) to serial interface.
+@param n Numeric value.
 */
 void serPrintDec(unsigned long n);
 
 /**
-@param n
+Sends specific number as OCT value prefixed with "0" to serial interface.
+@param n Numeric value.
 */
 void serPrintOct(unsigned long n);
 
 /**
-@param *buf
-@param len
+Sends len values from binary buffer buf to serial interface.
+Receiving binary data from serial interface should be done by 
+#serAvailable #serPeek and #serRead functions. 
+Parsing needs to be done on the higher level routines.
+@param *buf Buffer of the binary data.
+@param len Number of bytes to be sent to serial interface.
 */
 void serSendBinary(const uint8_t *buf, uint8_t len);
+
+/**
+Sends terminal command to clear screen.
+*/
+void serTermClearScreen(void);
+
+/**
+Sends terminal command to position cursor in home location (top left corner).
+*/
+void serTermCursorHome(void);
 
 #endif /* SERIAL_H_ */
