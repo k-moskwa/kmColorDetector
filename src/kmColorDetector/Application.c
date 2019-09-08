@@ -129,7 +129,11 @@ void appLoop(void) {
 #endif
 	// Button is looped in one of Software Interrupts
 	// Check if button has been pressed since last time
+#ifdef KMCD_NO_SERIAL_DEBUG
 	if (true == btnPressed()) {
+#else
+	if (true == btnPressed() || ' ' == serRead()) {
+#endif
 		// Reset button state
 		btnReset();
 #ifndef KMCD_NO_DEBUG
