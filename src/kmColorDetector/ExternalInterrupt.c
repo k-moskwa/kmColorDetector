@@ -47,26 +47,26 @@ void extIntRegisterCallback(ExtIntType type, ExtIntSense sense, bool pullup, Ext
 				} else {
 				EXT_INT_PORT &= ~_BV(EXT_INT_PIN_0);
 			}
-			MCUCR &= ~(EXT_INT_CONF_0_ALL_BITS);
+			EXT_INT_SENSE_REG &= ~(EXT_INT_CONF_0_ALL_BITS);
 			switch (sense) {
 				case EXT_INT_LOGICAL_CHANGE : {
-					MCUCR |= EXT_INT_CONF_0_LOGICAL_CHANGE;
+					EXT_INT_SENSE_REG |= EXT_INT_CONF_0_LOGICAL_CHANGE;
 					break;
 				}
 				case EXT_INT_FALLING_EDGE : {
-					MCUCR |= EXT_INT_CONF_0_FALLING_EDGE;
+					EXT_INT_SENSE_REG |= EXT_INT_CONF_0_FALLING_EDGE;
 					break;
 				}
 				case EXT_INT_RISING_EDGE : {
-					MCUCR |= EXT_INT_CONF_0_RISING_EDGE;
+					EXT_INT_SENSE_REG |= EXT_INT_CONF_0_RISING_EDGE;
 					break;
 				}
 				// Low Level
 				default : {
-					MCUCR |= EXT_INT_CONF_0_LOW_LEVEL;
+					EXT_INT_SENSE_REG |= EXT_INT_CONF_0_LOW_LEVEL;
 				}
 			}
-			GICR |= _BV(INT0);
+			EXT_INT_MASK_REG |= _BV(INT0);
 			break;
 		}
 		case EXT_INT_1 : {
@@ -79,26 +79,26 @@ void extIntRegisterCallback(ExtIntType type, ExtIntSense sense, bool pullup, Ext
 				} else {
 				EXT_INT_PORT &= ~_BV(EXT_INT_PIN_1);
 			}
-			MCUCR &= ~(EXT_INT_CONF_1_ALL_BITS);
+			EXT_INT_SENSE_REG &= ~(EXT_INT_CONF_1_ALL_BITS);
 			switch (sense) {
 				case EXT_INT_LOGICAL_CHANGE : {
-					MCUCR |= EXT_INT_CONF_1_LOGICAL_CHANGE;
+					EXT_INT_SENSE_REG |= EXT_INT_CONF_1_LOGICAL_CHANGE;
 					break;
 				}
 				case EXT_INT_FALLING_EDGE : {
-					MCUCR |= EXT_INT_CONF_1_FALLING_EDGE;
+					EXT_INT_SENSE_REG |= EXT_INT_CONF_1_FALLING_EDGE;
 					break;
 				}
 				case EXT_INT_RISING_EDGE : {
-					MCUCR |= EXT_INT_CONF_1_RISING_EDGE;
+					EXT_INT_SENSE_REG |= EXT_INT_CONF_1_RISING_EDGE;
 					break;
 				}
 				// Low Level
 				default : {
-					MCUCR |= EXT_INT_CONF_1_LOW_LEVEL;
+					EXT_INT_SENSE_REG |= EXT_INT_CONF_1_LOW_LEVEL;
 				}
 			}
-			GICR |= _BV(INT0);
+			EXT_INT_MASK_REG |= _BV(INT1);
 			break;
 
 		}
@@ -109,11 +109,11 @@ void extIntRegisterCallback(ExtIntType type, ExtIntSense sense, bool pullup, Ext
 void extIntDisable(ExtIntType type) {
 	switch (type) {
 		case EXT_INT_0 : {
-			GICR &= ~_BV(INT0);
+			EXT_INT_MASK_REG &= ~_BV(INT0);
 			break;
 		}
 		case EXT_INT_1 : {
-			GICR &= ~_BV(INT1);
+			EXT_INT_MASK_REG &= ~_BV(INT1);
 			break;
 		}
 		// no default

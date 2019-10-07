@@ -57,4 +57,15 @@
 /// Mask for all configuration bits of External Interrupt 1
 #define EXT_INT_CONF_1_ALL_BITS			EXT_INT_CONF_1_RISING_EDGE
 
+#if defined(AVR_CPU_SERIES_0)
+#define EXT_INT_SENSE_REG MCUR
+#define EXT_INT_MASK_REG GICR
+#endif
+
+#if defined(AVR_CPU_SERIES_48)
+#define EXT_INT_SENSE_REG EICRA
+#define EXT_INT_MASK_REG EIMSK
+#endif
+
+
 #endif /* EXTERNALINTERRUPTDEFS_H_ */

@@ -146,12 +146,22 @@ void timer1DisablePwm(Tcc1PwmOut pwmOut) {
 }
 
 void timer1EnableInterrupt(void) {
+#if defined(AVR_CPU_SERIES_0)
 	TIMSK |= _BV(TOIE1);
+#endif
+#if defined(AVR_CPU_SERIES_48)
+	TIMSK1 |= _BV(TOIE1);
+#endif
 	timer1Start();
 }
 
 void timer1DisableInterrupt(void) {
+#if defined(AVR_CPU_SERIES_0)
 	TIMSK &= ~_BV(TOIE1);
+#endif
+#if defined(AVR_CPU_SERIES_48)
+	TIMSK1 &= ~_BV(TOIE1);
+#endif
 }
 
 void timer1RegisterCallback(Timer1Callback *callback, void *userData) {

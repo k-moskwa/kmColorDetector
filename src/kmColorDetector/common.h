@@ -28,5 +28,6 @@
 #include "config.h"
 #include "version.h"
 #include "strings.h"
+#include "CpuDefs.h"
 
 #endif /* COMMON_H_ */

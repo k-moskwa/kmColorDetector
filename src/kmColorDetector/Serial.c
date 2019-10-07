@@ -191,15 +191,15 @@ void irqTx(void) {
     // location". This makes sure flush() won't return until the bytes
     // actually got written. Other r/w bits are preserved, and zeros
     // written to the rest.
-    *_ucsra = ((*_ucsra) & (_BV(U2X) | _BV(MPCM))) | _BV(TXC);
+    *_ucsra = ((*_ucsra) & (_BV(U2X0) | _BV(MPCM0))) | _BV(TXC0);
     if (txAvailable() == 0) {
         // if buffer empty - disable interrupts
-        UCSRB &= ~(1<<UDRIE);
+        *_ucsrb &= ~_BV(UDRIE0);
     }
 }
 
 void irqRx(void) {
-    if (bit_is_clear(*_ucsra, UPE)) {
+    if (bit_is_clear(*_ucsra, UPE0)) {
         // No Parity error, read byte and store it in the buffer if there is room
         unsigned char c = *_udr;
         // if we should be storing the received character into the location
@@ -234,27 +234,27 @@ volatile uint8_t *ucsrc, volatile uint8_t *udr) {
 }
 
 void serInitComplete(unsigned long baud, uint8_t config) {
-    serSetup(&UBRRH, &UBRRL, &UCSRA, &UCSRB, &UCSRC, &UDR);
+    serSetup(&UBRR0H, &UBRR0L, &UCSR0A, &UCSR0B, &UCSR0C, &UDR0);
     _written = false;
 
 	#define __UBRR F_CPU/16/UART_BAUD-1 
 	uint16_t baud_setting = (F_CPU / 4 / baud - 1) / 2;
 	if (baud_setting > 0xFFF) {
 		baud_setting /= 2;
-	    *_ucsra &= ~_BV(U2X);
+	    *_ucsra &= ~_BV(U2X0);
 	} else {
-	    *_ucsra |= _BV(U2X);
+	    *_ucsra |= _BV(U2X0);
 	}
 
     *_ubrrh =  baud_setting >> 8;
     *_ubrrl =  baud_setting & 0xFF;
 
-#if defined(__AVR_ATmega8__) || defined(__AVR_ATmega16__) || defined(__AVR_ATmega32__)
+#if defined(AVR_CPU_SERIES_0)
     config |= _BV(URSEL); // select UCSRC register (shared with UBRRH)
 #endif
     *_ucsrc = config;
 
-    *_ucsrb |= (_BV(RXEN) | _BV(TXEN) | _BV(RXCIE));
+    *_ucsrb |= (_BV(RXEN0) | _BV(TXEN0) | _BV(RXCIE0));
 }
 
 void serInit(unsigned long baud) {
@@ -269,12 +269,12 @@ void serFlush(void) {
         return;
     }
 
-    while (bit_is_set(*_ucsrb, UDRIE) || bit_is_clear(*_ucsra, TXC)) {
-        if (bit_is_clear(SREG, SREG_I) && bit_is_set(*_ucsrb, UDRIE)) {
+    while (bit_is_set(*_ucsrb, UDRIE0) || bit_is_clear(*_ucsra, TXC0)) {
+        if (bit_is_clear(SREG, SREG_I) && bit_is_set(*_ucsrb, UDRIE0)) {
             // Interrupts are globally disabled, but the DR empty
             // interrupt should be enabled, so poll the DR empty flag to
             // prevent deadlock
-            if (bit_is_set(*_ucsra, UDRE)) {
+            if (bit_is_set(*_ucsra, UDRE0)) {
                 irqTx();
             }
         }
@@ -284,9 +284,9 @@ void serFlush(void) {
 void serEnd(void) {
     // wait for transmission of outgoing data
     serFlush();
-    *_ucsrb &= ~_BV(RXEN);
-    *_ucsrb &= ~_BV(TXEN);
-    *_ucsrb &= ~_BV(RXCIE);
+    *_ucsrb &= ~_BV(RXEN0);
+    *_ucsrb &= ~_BV(TXEN0);
+    *_ucsrb &= ~_BV(RXCIE0);
 
     rxFlush();
 }
@@ -341,7 +341,7 @@ size_t serWriteChar(uint8_t c) {
     // to the data register and be done. This shortcut helps
     // significantly improve the effective data-rate at high (> 500kbit/s)
     // bit-rates, where interrupt overhead becomes a slowdown.
-    if (0 == txAvailable() && bit_is_set(*_ucsra, UDRE)) {
+    if (0 == txAvailable() && bit_is_set(*_ucsra, UDRE0)) {
         // If TXC is cleared before writing UDR and the previous byte
         // completes before writing to UDR, TXC will be set but a byte
         // is still being transmitted causing flush() to return too soon.
@@ -352,7 +352,7 @@ size_t serWriteChar(uint8_t c) {
         // be cleared when no bytes are left, causing flush() to hang
         ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
             *_udr = c;
-            *_ucsra = ((*_ucsra) & (_BV(U2X) | _BV(MPCM))) | _BV(TXC);
+            *_ucsra = ((*_ucsra) & (_BV(U2X0) | _BV(MPCM0))) | _BV(TXC0);
         }
     return 1;
     }
@@ -364,7 +364,7 @@ size_t serWriteChar(uint8_t c) {
             // register empty flag ourselves. If it is set, pretend an
             // interrupt has happened and call the handler to free up
             // space for us.
-            if(bit_is_set(*_ucsra, UDRE)) {
+            if(bit_is_set(*_ucsra, UDRE0)) {
                 irqTx();
             } else {
                 // nop, the interrupt handler will free up space for us
@@ -377,7 +377,7 @@ size_t serWriteChar(uint8_t c) {
         // resulting in buffer retransmission
         txStore(c);
         // enable interrupts
-        *_ucsrb |= _BV(UDRIE);
+        *_ucsrb |= _BV(UDRIE0);
     }
     return 1;
 }
@@ -496,10 +496,10 @@ void serTermBlink(void) {
 	serPrintString_P(PSTR("\e[5m"));
 }
 
-ISR( USART_RXC_vect ) {
+ISR( USART0_RX_vect ) {
     irqRx();
 }
 
-ISR( USART_UDRE_vect ) {
+ISR( USART0_UDRE_vect ) {
     irqTx();
 }

@@ -51,6 +51,7 @@ static volatile uint16_t _softPrescallerCurrent = 0;
 
 // "Private" functions.
 void timer2SetPeriod(int32_t miliseconds);
+void swtInterrupt(void);
 
 // Implementation
 void swtInit(int16_t miliseconds) {
@@ -61,15 +62,31 @@ void swtInit(int16_t miliseconds) {
 		_timers[i].currentValue = 0;
 	}
 	/// Timer2 mode 2 - CTC top value OCR2
+#if defined(AVR_CPU_SERIES_0)
 	TCCR2 |= TCC_2_MODE_2;
+#endif
+#if defined(AVR_CPU_SERIES_48)
+	TCCR2A |= TCC_2_MODE_2;
+	TCCR2B |= TCC_2_MODE_2_B;
+#endif
 	/// Timer/Counter2 Output Compare Match Interrupt Enable
+#if defined(AVR_CPU_SERIES_0)
 	TIMSK = _BV(OCIE2);
+#endif
+#if defined(AVR_CPU_SERIES_48)
+	TIMSK2 = _BV(OCIE2A);
+#endif
 	// set prescaler and OCR2
 	timer2SetPeriod(miliseconds);
 }
 
 void swtDisable(void) {
+#if defined(AVR_CPU_SERIES_0)
 	TCCR2 &= ~(TCC2_CS_MASK);
+#endif
+#if defined(AVR_CPU_SERIES_48)
+	TCCR2B &= ~(TCC2_CS_MASK);
+#endif
 }
 
 void swtLoop(void) {
@@ -140,12 +157,18 @@ void timer2SetPeriod(int32_t miliseconds) {
 		_softPrescallerInit = (cycles >> 8) & 0xFFFF;
 		cycles &= 0xFF;
 		}
+#if defined(AVR_CPU_SERIES_0)
 	OCR2 = cycles; // it should be already less than 0xFF
 	TCCR2 |= timer2PrescalerSelectBits;
+#endif
+#if defined(AVR_CPU_SERIES_48)
+	OCR2A = cycles; // it should be already less than 0xFF
+	TCCR2B |= timer2PrescalerSelectBits;
+#endif
 	return;
 }
 
-ISR(TIMER2_COMP_vect) {
+void swtInterrupt(void) {
 	if (_softPrescallerCurrent == 0) {
 		for (int i = 0; i < SWT_SIZE_OF; i++) {
 			if (true == _timers[i].enabled && _timers[i].currentValue > 0) {
@@ -153,7 +176,18 @@ ISR(TIMER2_COMP_vect) {
 			}
 		}
 		_softPrescallerCurrent = _softPrescallerInit;
-	} else {
+		} else {
 		_softPrescallerCurrent--;
 	}
 }
+
+#if defined(AVR_CPU_SERIES_0)
+ISR(TIMER2_COMP_vect) {
+	swtInterrupt();
+}
+#endif
+#if defined(AVR_CPU_SERIES_48)
+ISR(TIMER2_COMPA_vect) {
+	swtInterrupt();
+}
+#endif

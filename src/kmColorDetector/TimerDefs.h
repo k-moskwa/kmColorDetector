@@ -163,7 +163,7 @@
 /// Set OC1A on compare match (set output to high level)
 #define TCC1_B_COMP_OUT_SET		_BV(COM1B1) |	_BV(COM1B0)
 
-#if defined(__AVR_ATmega8__)
+#if defined(__AVR_ATmega8__) || defined(__AVR_ATmega8A__) 
 /// Direction register o Timer1 PWM outputs
 #define TCC1_PWM_DDR DDRB
 /// Port register of Timer1 PWM outputs
@@ -178,7 +178,22 @@
 #define TCC1_T0_PIN PD4
 #endif
 
-#if defined(__AVR_ATmega32__)
+#if defined(__AVR_ATmega32__) || defined(__AVR_ATmega32A__)
+/// Direction register o Timer1 PWM outputs
+#define TCC1_PWM_DDR DDRD
+/// Port register of Timer1 PWM outputs
+#define TCC1_PWM_PORT PORTD
+/// PWM pin A of Timer1
+#define TCC1_PWM_PIN_A PD5
+/// PMW pin B of Timer1
+#define TCC1_PWM_PIN_B PD4
+/// Timer/Counter1 Input Capture Pin
+#define TCC1_ICP1_PIN PD6
+///
+#define TCC1_T0_PIN PB0
+#endif
+
+#if defined(__AVR_ATmega644__) || defined(__AVR_ATmega644P__)
 /// Direction register o Timer1 PWM outputs
 #define TCC1_PWM_DDR DDRD
 /// Port register of Timer1 PWM outputs
@@ -221,10 +236,20 @@
 #define TCC_2_MODE_0			0x00
 /// Timer2 mode 1 - PWM, Phase Correct top 0xFF
 #define TCC_2_MODE_1							_BV(WGM20)
-/// Timer2 mode 2 - CTC top value OCR2 
+/// Timer2 mode 2 - CTC top value OCR2 / OCRA
 #define TCC_2_MODE_2			_BV(WGM21)
 /// Timer2 mode 3 - Fast PWM top value 0xFF
 #define TCC_2_MODE_3			_BV(WGM21) |	_BV(WGM20)
+#if defined(AVR_CPU_SERIES_48)
+#define TCC_2_MODE_1_B			0x00
+#define TCC_2_MODE_2_B			0x00
+#define TCC_2_MODE_3_B			0x00
+#define TCC_2_MODE_4_B			0x00
+/// Timer2 mode 5 - PWM, Phase correct, top value OCRA
+#define TCC_2_MODE_5_B			_BV(WGM22)
+/// Timer2 mode 7 - Fast PWM, top value OCRA
+#define TCC_2_MODE_7_B			_BV(WGM22)
+#endif
 
 /// Normal port operation for compare match, OC2 disconnected
 #define TCC2_COMP_OUT_NORMAL	0x00
